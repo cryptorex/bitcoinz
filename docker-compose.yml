@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  base:
+    container_name: btcz_base
+    build:
+      context: .
+    volumes:
+      - ./:/bitcoinz/repo
+
+  mainnet:
+    image: btcz_base
+    ports:
+      - 1989:1989
+    volumes:
+      - ./.bitcoinz:/bitcoinz/.bitcoinz
+      - ./.zcash-params:/bitcoinz/.zcash-params
+
+  testnet:
+    image: btcz_base
+    ports:
+      - 11989:11989
+    volumes:
+      - ./.bitcoinz:/bitcoinz/.bitcoinz
+      - ./.zcash-params:/bitcoinz/.zcash-params
+    command: bitcoinzd -testnet
+
+# vim:set ts=2 sw=2 smarttab:

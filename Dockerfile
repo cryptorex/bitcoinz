@@ -5,22 +5,25 @@ RUN apt-get update \
   && apt-get install -y \
     curl \
     build-essential \
-  	pkg-config \
-  	libc6-dev \
-  	m4 \
-  	g++-multilib \
+    pkg-config \
+    libc6-dev \
+    m4 \
+    g++-multilib \
     autoconf \
-  	libtool \
-  	ncurses-dev \
-  	unzip \
-  	git \
-  	python \
+    libtool \
+    ncurses-dev \
+    unzip \
+    git \
+    python \
     zlib1g-dev \
-  	wget \
-  	bsdmainutils \
-  	automake \
-  	p7zip-full \
-  	pwgen \
+    wget \
+    bsdmainutils \
+    automake \
+    p7zip-full \
+    pwgen \
+    lintian \
+    g++-mingw-w64-x86-64 \
+    cmake \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/local/src/
@@ -43,16 +46,13 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 # Setup application directory
-RUN mkdir -p /bitcoinz/data
+RUN mkdir -p /bitcoinz/.bitcoinz
 
 # Copy binaries from build container
 COPY --from=build /usr/local/src/src/bitcoinzd /usr/local/bin
 COPY --from=build /usr/local/src/src/bitcoinz-cli /usr/local/bin
 COPY --from=build /usr/local/src/src/zcash-gtest /usr/local/bin
 COPY --from=build /usr/local/src/src/bitcoinz-tx /usr/local/bin
-COPY contrib/docker/cli /usr/local/bin
-
-RUN chmod +x /usr/local/bin/cli
 
 # Copy zcash params
 COPY --from=build /root/.zcash-params /bitcoinz/.zcash-params
@@ -60,4 +60,4 @@ COPY --from=build /root/.zcash-params /bitcoinz/.zcash-params
 RUN chown -R bitcoinz: /bitcoinz
 USER bitcoinz
 WORKDIR /bitcoinz
-CMD ["bitcoinzd", "-datadir=/bitcoinz/data"]
+CMD ["bitcoinzd"]
