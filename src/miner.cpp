@@ -343,6 +343,15 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn)
         txNew.vout[0].scriptPubKey = scriptPubKeyIn;
         txNew.vout[0].nValue = GetBlockSubsidy(nHeight, chainparams.GetConsensus());
 
+        if (nHeight > chainparams.GetCommunityFeeStartHeight()) {
+            // Community Fee is 5% of the block subsidy
+            auto vCommunityFee = txNew.vout[0].nValue * 0.05;
+            // Take some reward away from us
+            txNew.vout[0].nValue -= vCommunityFee;
+             // And give it to the community
+            txNew.vout.push_back(CTxOut(vCommunityFee, chainparams.GetCommunityFeeScriptAtHeight(nHeight)));
+        }
+
         // Add fees
         txNew.vout[0].nValue += nFees;
         txNew.vin[0].scriptSig = CScript() << nHeight << OP_0;

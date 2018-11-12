@@ -3168,6 +3168,23 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
         }
     }
 
+    // Coinbase transaction must include an output sending 5% of the block
+    // reward to a community fee script.
+    if (nHeight > 0) {
+        bool found = false;
+         BOOST_FOREACH(const CTxOut& output, block.vtx[0].vout) {
+            if (output.scriptPubKey == Params().GetCommunityFeeScriptAtHeight(nHeight)) {
+                if (output.nValue == (GetBlockSubsidy(nHeight, consensusParams) * 0.05)) {
+                    found = true;
+                    break;
+                }
+            }
+        }
+         if (!found) {
+            return state.DoS(100, error("%s: community fee missing", __func__), REJECT_INVALID, "cb-no-community-fee");
+        }
+    }
+
     return true;
 }
 

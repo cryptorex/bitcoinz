@@ -153,10 +153,10 @@ public:
                             //   total number of tx / (checkpoint block height / (24 * 24))
         };
 
-        // Founders reward script expects a vector of 2-of-3 multisig addresses
-        vFoundersRewardAddress = {
+        // Community Fee script expects a vector of 2-of-3 multisig addresses
+        vCommunityFeeAddress = {
         };
-        assert(vFoundersRewardAddress.size() <= consensus.GetLastFoundersRewardBlockHeight());
+        vCommunityFeeStartHeight = 9999999;
     }
 };
 static CMainParams mainParams;
@@ -233,10 +233,11 @@ public:
             0
         };
 
-        // Founders reward script expects a vector of 2-of-3 multisig addresses
-        vFoundersRewardAddress = {
+        // Community Fee script expects a vector of 2-of-3 multisig addresses
+        vCommunityFeeAddress = {
+          "t2FwcEhFdNXuFMv1tcYwaBJtYVtMj8b1uTg",
         };
-        assert(vFoundersRewardAddress.size() <= consensus.GetLastFoundersRewardBlockHeight());
+        vCommunityFeeStartHeight = 9999999;
     }
 };
 static CTestNetParams testNetParams;
@@ -296,10 +297,11 @@ public:
             0
         };
 
-        // Founders reward script expects a vector of 2-of-3 multisig addresses
-        //vFoundersRewardAddress = { "t2FwcEhFdNXuFMv1tcYwaBJtYVtMj8b1uTg" };
-    vFoundersRewardAddress = { };
-        assert(vFoundersRewardAddress.size() <= consensus.GetLastFoundersRewardBlockHeight());
+        // Community fee script expects a vector of 2-of-3 multisig addresses
+        vCommunityFeeAddress = {
+          "t2FwcEhFdNXuFMv1tcYwaBJtYVtMj8b1uTg",
+        };
+        vCommunityFeeStartHeight = 200;
     }
 };
 static CRegTestParams regTestParams;
@@ -346,23 +348,14 @@ bool SelectParamsFromCommandLine()
 }
 
 
-// Block height must be >0 and <=last founders reward block height
-// Index variable i ranges from 0 - (vFoundersRewardAddress.size()-1)
-std::string CChainParams::GetFoundersRewardAddressAtHeight(int nHeight) const {
-    int maxHeight = consensus.GetLastFoundersRewardBlockHeight();
-    assert(nHeight > 0 && nHeight <= maxHeight);
-
-    size_t addressChangeInterval = (maxHeight + vFoundersRewardAddress.size()) / vFoundersRewardAddress.size();
-    size_t i = nHeight / addressChangeInterval;
-    return vFoundersRewardAddress[i];
+std::string CChainParams::GetCommunityFeeAddressAtHeight(int nHeight) const {
+    return vCommunityFeeAddress[0];
 }
 
-// Block height must be >0 and <=last founders reward block height
-// The founders reward address is expected to be a multisig (P2SH) address
-CScript CChainParams::GetFoundersRewardScriptAtHeight(int nHeight) const {
-    assert(nHeight > 0 && nHeight <= consensus.GetLastFoundersRewardBlockHeight());
+CScript CChainParams::GetCommunityFeeScriptAtHeight(int nHeight) const {
+    assert(nHeight > GetCommunityFeeStartHeight());
 
-    CBitcoinAddress address(GetFoundersRewardAddressAtHeight(nHeight).c_str());
+    CBitcoinAddress address(GetCommunityFeeAddressAtHeight(nHeight).c_str());
     assert(address.IsValid());
     assert(address.IsScript());
     CScriptID scriptID = get<CScriptID>(address.Get()); // Get() returns a boost variant
@@ -370,11 +363,14 @@ CScript CChainParams::GetFoundersRewardScriptAtHeight(int nHeight) const {
     return script;
 }
 
-std::string CChainParams::GetFoundersRewardAddressAtIndex(int i) const {
-    assert(i >= 0 && i < vFoundersRewardAddress.size());
-    return vFoundersRewardAddress[i];
+std::string CChainParams::GetCommunityFeeAddressAtIndex(int i) const {
+    assert(i >= 0 && i < vCommunityFeeAddress.size());
+    return vCommunityFeeAddress[i];
 }
 
+int CChainParams::GetCommunityFeeStartHeight() const {
+  return vCommunityFeeStartHeight;
+}
 
 int validEHparameterList(EHparameters *ehparams, unsigned long blockheight, const CChainParams& params){
     //if in overlap period, there will be two valid solutions, else 1.

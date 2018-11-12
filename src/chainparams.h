@@ -96,10 +96,11 @@ public:
     const std::vector<unsigned char>& Base58Prefix(Base58Type type) const { return base58Prefixes[type]; }
     const std::vector<SeedSpec6>& FixedSeeds() const { return vFixedSeeds; }
     const Checkpoints::CCheckpointData& Checkpoints() const { return checkpointData; }
-    /** Return the founder's reward address and script for a given block height */
-    std::string GetFoundersRewardAddressAtHeight(int height) const;
-    CScript GetFoundersRewardScriptAtHeight(int height) const;
-    std::string GetFoundersRewardAddressAtIndex(int i) const;
+    /** Return the community fee address and script for a given block height */
+    std::string GetCommunityFeeAddressAtHeight(int height) const;
+    CScript GetCommunityFeeScriptAtHeight(int height) const;
+    std::string GetCommunityFeeAddressAtIndex(int i) const;
+    int GetCommunityFeeStartHeight() const;
     /** Enforce coinbase consensus rule in regtest mode */
     void SetRegTestCoinbaseMustBeProtected() { consensus.fCoinbaseMustBeProtected = true; }
     int GetNewTimeRule() const { return newTimeRule; }
@@ -129,7 +130,8 @@ protected:
     bool fMineBlocksOnDemand = false;
     bool fTestnetToBeDeprecatedFieldRPC = false;
     Checkpoints::CCheckpointData checkpointData;
-    std::vector<std::string> vFoundersRewardAddress;
+    std::vector<std::string> vCommunityFeeAddress;
+    int vCommunityFeeStartHeight;
     int newTimeRule;
 };
 
