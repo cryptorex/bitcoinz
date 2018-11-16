@@ -3170,7 +3170,7 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
 
     // Coinbase transaction must include an output sending 5% of the block
     // reward to a community fee script.
-    if (nHeight > 0) {
+    if (nHeight > Params().GetCommunityFeeStartHeight()) {
         bool found = false;
          BOOST_FOREACH(const CTxOut& output, block.vtx[0].vout) {
             if (output.scriptPubKey == Params().GetCommunityFeeScriptAtHeight(nHeight)) {

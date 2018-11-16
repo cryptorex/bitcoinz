@@ -349,12 +349,11 @@ bool SelectParamsFromCommandLine()
 
 
 std::string CChainParams::GetCommunityFeeAddressAtHeight(int nHeight) const {
+    assert(nHeight > GetCommunityFeeStartHeight());
     return vCommunityFeeAddress[0];
 }
 
 CScript CChainParams::GetCommunityFeeScriptAtHeight(int nHeight) const {
-    assert(nHeight > GetCommunityFeeStartHeight());
-
     CBitcoinAddress address(GetCommunityFeeAddressAtHeight(nHeight).c_str());
     assert(address.IsValid());
     assert(address.IsScript());
@@ -369,7 +368,7 @@ std::string CChainParams::GetCommunityFeeAddressAtIndex(int i) const {
 }
 
 int CChainParams::GetCommunityFeeStartHeight() const {
-  return vCommunityFeeStartHeight;
+    return vCommunityFeeStartHeight;
 }
 
 int validEHparameterList(EHparameters *ehparams, unsigned long blockheight, const CChainParams& params){
