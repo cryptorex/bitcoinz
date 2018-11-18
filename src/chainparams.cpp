@@ -235,9 +235,9 @@ public:
 
         // Community Fee script expects a vector of 2-of-3 multisig addresses
         vCommunityFeeAddress = {
-          "t2FwcEhFdNXuFMv1tcYwaBJtYVtMj8b1uTg",
+          "tmN3ftjW1Vy1uajrN1P3A8npAUrADS2NhUe",
         };
-        vCommunityFeeStartHeight = 9999999;
+        vCommunityFeeStartHeight = 23200;
     }
 };
 static CTestNetParams testNetParams;
