@@ -893,7 +893,7 @@ UniValue getblocksubsidy(const UniValue& params, bool fHelp)
             "\nResult:\n"
             "{\n"
             "  \"miner\" : x.xxx           (numeric) The mining reward amount in " + CURRENCY_UNIT + ".\n"
-            "  \"community\" : x.xxx        (numeric) The community fee amount in " + CURRENCY_UNIT + ".\n"
+            "  \"founders\" : x.xxx        (numeric) The community fee amount in " + CURRENCY_UNIT + ".\n"
             "}\n"
             "\nExamples:\n"
             + HelpExampleCli("getblocksubsidy", "1000")
@@ -908,11 +908,11 @@ UniValue getblocksubsidy(const UniValue& params, bool fHelp)
     CAmount nReward = GetBlockSubsidy(nHeight, Params().GetConsensus());
     CAmount nCommunityFee = 0;
     if (nHeight > Params().GetCommunityFeeStartHeight()) {
-        nCommunityFee = nReward/5;
+        nCommunityFee = nReward * 0.05;
         nReward -= nCommunityFee;
     }
     UniValue result(UniValue::VOBJ);
     result.push_back(Pair("miner", ValueFromAmount(nReward)));
-    result.push_back(Pair("community", ValueFromAmount(nCommunityFee)));
+    result.push_back(Pair("founders", ValueFromAmount(nCommunityFee)));
     return result;
 }
