@@ -349,7 +349,7 @@ bool SelectParamsFromCommandLine()
 
 
 std::string CChainParams::GetCommunityFeeAddressAtHeight(int nHeight) const {
-    assert(nHeight > GetCommunityFeeStartHeight());
+    assert(nHeight >= GetCommunityFeeStartHeight());
     return vCommunityFeeAddress[0];
 }
 
