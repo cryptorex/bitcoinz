@@ -219,7 +219,7 @@ public:
 
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_test, pnSeed6_test + ARRAYLEN(pnSeed6_test));
 
-        fMiningRequiresPeers = true;
+        fMiningRequiresPeers = false;
         fDefaultConsistencyChecks = false;
         fRequireStandard = true;
         fMineBlocksOnDemand = false;
@@ -235,7 +235,7 @@ public:
 
         // Community Fee script expects a vector of 2-of-3 multisig addresses
         vCommunityFeeAddress = {
-          "tmN3ftjW1Vy1uajrN1P3A8npAUrADS2NhUe",
+          "t2CihAq1hbJB49hxWPPifDD7jWRepFoAM2b",
         };
         vCommunityFeeStartHeight = 23200;
     }
