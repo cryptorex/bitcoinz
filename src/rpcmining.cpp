@@ -905,7 +905,7 @@ UniValue getblocksubsidy(const UniValue& params, bool fHelp)
     if (nHeight < 0)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Block height out of range");
 
-    CAmount nReward = GetBlockSubsidy(nHeight, Params().GetConsensus());
+    CAmount nReward = GetBlockSubsidy(nHeight + 1, Params().GetConsensus());
     CAmount nCommunityFee = 0;
     if (nHeight >= Params().GetCommunityFeeStartHeight()) {
         nCommunityFee = nReward * 0.05;
